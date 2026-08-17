@@ -1,0 +1,61 @@
+@page "/attendance"
+@rendermode InteractiveServer
+@inject EventService EventService
+@inject UserSessionService Session
+
+<PageTitle>EventEase | Attendance</PageTitle>
+
+<div class="container section">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">DASHBOARD</span>
+            <h1>Attendance Tracker</h1>
+            <p class="lead">Manage attendance for registered EventEase participants.</p>
+        </div>
+        @if (Session.IsLoggedIn)
+        {
+            <div class="session-badge">Signed in as <strong>@Session.UserName</strong></div>
+        }
+    </div>
+
+    @foreach (var item in EventService.GetEvents())
+    {
+        var registrations = EventService.GetRegistrations(item.Id);
+        <div class="card attendance-card">
+            <div>
+                <h3>@item.Title</h3>
+                <p>@item.Date.ToString("dd MMM yyyy, hh:mm tt") · @item.Location</p>
+            </div>
+            <div class="attendance-count">
+                <strong>@registrations.Count</strong>
+                <span>/ @item.Capacity</span>
+            </div>
+            <div class="attendance-list">
+                @if (!registrations.Any())
+                {
+                    <span class="muted">No registrations yet.</span>
+                }
+                else
+                {
+                    @foreach (var registration in registrations)
+                    {
+                        <div class="attendance-row">
+                            <span>@registration.FullName</span>
+                            <button class="btn btn-sm @(registration.Attended ? "btn-success" : "btn-outline-primary")"
+                                    @onclick="() => ToggleAttendance(registration)">
+                                @(registration.Attended ? "Present" : "Mark Present")
+                            </button>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private void ToggleAttendance(Registration registration)
+    {
+        registration.Attended = !registration.Attended;
+    }
+}
