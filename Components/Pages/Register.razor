@@ -1,0 +1,87 @@
+@page "/register"
+@rendermode InteractiveServer
+@inject EventService EventService
+@inject UserSessionService Session
+
+<PageTitle>EventEase | Registration</PageTitle>
+
+<div class="container section narrow">
+    <span class="eyebrow">REGISTRATION</span>
+    <h1>Reserve your spot</h1>
+    <p class="lead">Complete the form below to register for an upcoming EventEase event.</p>
+
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <div class="alert alert-success">@successMessage</div>
+    }
+
+    <EditForm Model="registration" OnValidSubmit="RegisterAsync">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="card form-card">
+            <div class="form-group">
+                <label for="event">Event</label>
+                <InputSelect id="event" class="form-select" @bind-Value="registration.EventId">
+                    <option value="0">-- Select an event --</option>
+                    @foreach (var item in EventService.GetEvents().Where(e => e.AttendanceCount < e.Capacity))
+                    {
+                        <option value="@item.Id">@item.Title — @item.Date.ToString("dd MMM yyyy")</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => registration.EventId" />
+            </div>
+
+            <div class="form-group">
+                <label for="name">Full name</label>
+                <InputText id="name" class="form-control" @bind-Value="registration.FullName" />
+                <ValidationMessage For="() => registration.FullName" />
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <InputText id="email" type="email" class="form-control" @bind-Value="registration.Email" />
+                <ValidationMessage For="() => registration.Email" />
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <InputText id="phone" class="form-control" @bind-Value="registration.Phone" />
+                <ValidationMessage For="() => registration.Phone" />
+            </div>
+
+            <button class="btn btn-primary w-100" type="submit" disabled="@isSubmitting">
+                @(isSubmitting ? "Registering..." : "Complete Registration")
+            </button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    private Registration registration = new();
+    private bool isSubmitting;
+    private string? successMessage;
+
+    private async Task RegisterAsync()
+    {
+        isSubmitting = true;
+        successMessage = null;
+
+        await Task.Delay(250);
+
+        var eventItem = EventService.GetEvent(registration.EventId);
+        if (eventItem is null || eventItem.AttendanceCount >= eventItem.Capacity)
+        {
+            successMessage = "Sorry, that event is currently full.";
+            isSubmitting = false;
+            return;
+        }
+
+        EventService.AddRegistration(registration);
+        Session.SetUser(registration.FullName, registration.Email);
+        successMessage = $"You're registered for {eventItem.Title}!";
+
+        registration = new Registration();
+        isSubmitting = false;
+    }
+}
