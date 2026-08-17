@@ -1,0 +1,36 @@
+<article class="event-card @(IsSelected ? "selected" : "")">
+    <div class="event-date">
+        <span>@Event.Date.ToString("MMM")</span>
+        <strong>@Event.Date.Day</strong>
+    </div>
+
+    <div class="event-content">
+        <div class="event-topline">
+            <span class="badge">@Event.Category</span>
+            <span class="spots">@RemainingSpots spots left</span>
+        </div>
+
+        <h3>@Event.Title</h3>
+        <p class="event-meta">@Event.Date.ToString("dddd, dd MMMM yyyy · hh:mm tt")</p>
+        <p class="event-meta">@Event.Location</p>
+        <p>@Event.Description</p>
+
+        <div class="event-actions">
+            <button class="btn btn-outline-primary btn-sm" @onclick="ToggleSelected">
+                @(IsSelected ? "Selected" : "Select event")
+            </button>
+            <a class="btn btn-primary btn-sm" href="/register">Register</a>
+        </div>
+    </div>
+</article>
+
+@code {
+    [Parameter, EditorRequired] public EventItem Event { get; set; } = default!;
+    [Parameter] public bool IsSelected { get; set; }
+    [Parameter] public EventCallback<bool> IsSelectedChanged { get; set; }
+
+    private int RemainingSpots => Math.Max(0, Event.Capacity - Event.AttendanceCount);
+
+    private async Task ToggleSelected()
+        => await IsSelectedChanged.InvokeAsync(!IsSelected);
+}
