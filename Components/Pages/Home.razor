@@ -1,0 +1,58 @@
+@page "/"
+@rendermode InteractiveServer
+@inject EventService EventService
+
+<PageTitle>EventEase | Events</PageTitle>
+
+<div class="hero">
+    <div>
+        <span class="eyebrow">EVENT MANAGEMENT</span>
+        <h1>Find your next <span>great event.</span></h1>
+        <p>Discover events, register in seconds, and keep attendance organized with EventEase.</p>
+        <a href="/register" class="btn btn-primary btn-lg">Register for an event</a>
+    </div>
+</div>
+
+<section class="container section">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">UPCOMING</span>
+            <h2>Browse Events</h2>
+        </div>
+        <div class="search-wrap">
+            <label for="eventSearch" class="visually-hidden">Search events</label>
+            <input id="eventSearch" class="form-control" placeholder="Search by title or location..."
+                   @bind="searchText" @bind:event="oninput" />
+        </div>
+    </div>
+
+    @if (!FilteredEvents.Any())
+    {
+        <div class="empty-state">No events match your search.</div>
+    }
+    else
+    {
+        <div class="event-grid">
+            @foreach (var item in FilteredEvents)
+            {
+                <EventCard Event="item"
+                           IsSelected="@(selectedEventId == item.Id)"
+                           IsSelectedChanged="@(value => SelectEvent(item.Id, value))" />
+            }
+        </div>
+    }
+</section>
+
+@code {
+    private string searchText = string.Empty;
+    private int? selectedEventId;
+
+    private IEnumerable<EventItem> FilteredEvents =>
+        EventService.GetEvents()
+            .Where(e => string.IsNullOrWhiteSpace(searchText)
+                || e.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase)
+                || e.Location.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+
+    private void SelectEvent(int id, bool selected)
+        => selectedEventId = selected ? id : null;
+}
