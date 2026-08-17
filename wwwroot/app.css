@@ -1,0 +1,214 @@
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f6f7fb;
+    color: #18202a;
+}
+
+.topbar {
+    min-height: 70px;
+    padding: 0 6%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #111827;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+.brand-mark {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: #6366f1;
+}
+
+.topbar nav {
+    display: flex;
+    gap: 24px;
+}
+
+.topbar a {
+    color: #dbeafe;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.topbar a:hover { color: white; }
+
+.main-content { min-height: calc(100vh - 70px); }
+
+.container {
+    width: min(1120px, 92%);
+    margin: auto;
+}
+
+.section { padding: 55px 0; }
+.narrow { max-width: 720px; }
+
+.hero {
+    padding: 95px 6%;
+    background: linear-gradient(135deg, #111827, #312e81);
+    color: white;
+}
+
+.hero > div { max-width: 760px; margin: auto; }
+
+.hero h1 {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 1;
+    margin: 12px 0 22px;
+}
+
+.hero h1 span { color: #a5b4fc; }
+.hero p { max-width: 650px; font-size: 1.15rem; color: #dbeafe; }
+
+.eyebrow {
+    font-size: .78rem;
+    font-weight: 800;
+    letter-spacing: .16em;
+    color: #6366f1;
+}
+
+.hero .eyebrow { color: #c7d2fe; }
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.section-heading h1, .section-heading h2 {
+    margin: 5px 0;
+}
+
+.search-wrap { width: min(360px, 100%); }
+
+.event-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+    gap: 20px;
+}
+
+.event-card, .card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, .06);
+}
+
+.event-card {
+    padding: 22px;
+    display: flex;
+    gap: 18px;
+    transition: .2s ease;
+}
+
+.event-card:hover, .event-card.selected {
+    transform: translateY(-3px);
+    border-color: #6366f1;
+}
+
+.event-date {
+    min-width: 60px;
+    height: 68px;
+    border-radius: 14px;
+    background: #eef2ff;
+    color: #4338ca;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.event-date span { font-size: .72rem; font-weight: 800; }
+.event-date strong { font-size: 1.4rem; }
+
+.event-content { flex: 1; }
+.event-content h3 { margin: 12px 0 6px; }
+.event-content p { color: #64748b; }
+
+.event-topline, .event-actions, .attendance-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.badge {
+    background: #f1f5f9;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+.spots { font-size: .75rem; color: #64748b; }
+.event-meta { margin: 3px 0; font-size: .9rem; }
+.event-actions { margin-top: 18px; justify-content: flex-start; }
+
+.form-card { padding: 28px; }
+.form-group { margin-bottom: 18px; }
+.form-group label { display: block; font-weight: 700; margin-bottom: 7px; }
+
+.alert { margin-bottom: 20px; }
+.empty-state { padding: 50px; text-align: center; background: white; border-radius: 16px; }
+
+.attendance-card {
+    padding: 24px;
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 18px;
+}
+
+.attendance-card h3 { margin: 0 0 5px; }
+.attendance-card p { color: #64748b; margin: 0; }
+
+.attendance-count {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-size: 1.2rem;
+}
+
+.attendance-count strong { font-size: 2rem; }
+.attendance-list { grid-column: 1 / -1; border-top: 1px solid #e5e7eb; padding-top: 15px; }
+
+.attendance-row {
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.session-badge {
+    background: #ecfdf5;
+    color: #047857;
+    padding: 10px 14px;
+    border-radius: 10px;
+}
+
+.muted { color: #94a3b8; }
+
+@media (max-width: 700px) {
+    .topbar { padding: 12px 4%; flex-direction: column; gap: 10px; }
+    .hero { padding: 65px 5%; }
+    .section-heading { align-items: stretch; flex-direction: column; }
+    .search-wrap { width: 100%; }
+    .attendance-card { grid-template-columns: 1fr; }
+}
